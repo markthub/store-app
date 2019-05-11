@@ -1,28 +1,40 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <nav-bar/>
+    <div class="container">
+      <error/>
+      <div class="mt-5">
+        <router-view/>
+      </div>
+    </div>
+    <footer>
+      <div class="logo"></div>
+      <p>
+        Sample project provided by
+        <a href="https://auth0.com">Auth0</a>
+      </p>
+    </footer>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import "jquery";
 
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+  import NavBar from "./components/NavBar";
+  import Error from "./components/Error";
+
+  export default {
+    components: {
+      NavBar,
+      Error
+    },
+    async created() {
+      try {
+        await this.$auth.renewTokens();
+      } catch {
+        // Supress the 'not logged in' error as we can illegitimately get that
+        // when processing the callback url
+      }
+    }
+  };
 </script>
-
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
